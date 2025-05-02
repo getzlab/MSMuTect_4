@@ -37,13 +37,7 @@ def simple_index_check(bam: str):
     bam_bai_file_exists = os.path.exists(bam_bai_path)
     bai_file_exists = os.path.exists(bai_path)
     index_file_older_than_bam_message = "Index file older than BAM file. Index file must be younger than BAM file. If you are sure the index file is correct, run 'touch [index_file]'"
-    if bam_bai_file_exists:
-        if os.path.getmtime(bam_bai_path) < os.path.getmtime(bam):
-            exit_on(index_file_older_than_bam_message)
-    elif bai_file_exists:
-        if os.path.getmtime(bai_path) < os.path.getmtime(bam):
-            exit_on(index_file_older_than_bam_message)
-    else:
+    if not bam_bai_file_exists and not bai_file_exists:
         exit_on("Given BAM file/s are not sorted and/or indexed")
 
 
