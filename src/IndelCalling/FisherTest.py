@@ -4,23 +4,28 @@ from collections import defaultdict
 import numpy as np
 
 
+MAX_FACTORIAL_CACHE = 1024
+
 class Fisher:
     def __init__(self):
-        self.already_computed = defaultdict(lambda: -1)
+        self.already_computed = {}
         self.already_computed[0] = 1
         self.already_computed[1] = 1
 
     def factorial(self, n: int) -> int:
-        if self.already_computed[n] != -1:
+        if n in self.already_computed:
             return self.already_computed[n]
-        elif n > sys.getrecursionlimit() - 1:  # to avoid recursion overload
+        if n > MAX_FACTORIAL_CACHE:
             ans = math.factorial(n)
             self.already_computed[n] = ans
             return ans
-        else:
-            answer = n * self.factorial(n-1)
-            self.already_computed[n] = answer
-            return answer
+        i = 1
+        for i in range(n, -1, -1):
+            if i in self.already_computed:
+                break
+        for j in range(i, n):
+            self.already_computed[j + 1] = (j + 1) * self.already_computed[j]
+        return self.already_computed[n]
 
     def choose(self, n: int, k: int) -> int:
         numerator = self.factorial(n)
