@@ -62,7 +62,8 @@ def calculate_AICs(normal_alleles: AlleleSet, tumor_alleles: AlleleSet, noise_ta
 
 
 def passes_AICs(AIC_scores: AICs, LOR_ratio = 8.0) -> bool:
-    return AIC_scores.tumor_tumor - AIC_scores.tumor_normal and AIC_scores.normal_normal - AIC_scores.normal_tumor < -LOR_ratio
+    return (AIC_scores.tumor_tumor - AIC_scores.tumor_normal) < -LOR_ratio \
+    and (AIC_scores.normal_normal - AIC_scores.normal_tumor) < -LOR_ratio
 
 
 def fisher_test(normal_alleles: AlleleSet, tumor_alleles: AlleleSet, fisher_calculator: Fisher) -> float:
